@@ -13,3 +13,10 @@ setup/*.cmd
 pages/
 cov-int*
 /.vs
+/fsserver/.vs
+/server/.vs
+/SimpleDLNA/.vs
+/thumbs/.vs
+/util/.vs
+/sdlna/.vs
+/NMaier.Windows.Forms/.vs
