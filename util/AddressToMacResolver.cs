@@ -44,7 +44,7 @@ namespace NMaier.SimpleDlna.Utilities
 
         try {
           if (SafeNativeMethods.SendARP(addr, 0, raw, ref length) == 0) {
-            mac = $"{raw[0]:X}:{raw[1]:X}:{raw[2]:X}:{raw[3]:X}:{raw[4]:X}:{raw[5]:X}";
+            mac = $"{raw[0]:X2}:{raw[1]:X2}:{raw[2]:X2}:{raw[3]:X2}:{raw[4]:X2}:{raw[5]:X2}";
           }
         }
         catch (DllNotFoundException) {
