@@ -285,7 +285,10 @@ namespace NMaier.SimpleDlna.GUI
     /*
     private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
     {
-
+      e.Cancel = !canClose;
+      if (!canClose) {
+      WindowState = FormWindowState.Minimized;
+      }
     }
     */
     private void FormMain_Resize(object sender, EventArgs e)
