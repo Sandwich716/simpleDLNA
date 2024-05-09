@@ -37,7 +37,8 @@ namespace NMaier.SimpleDlna.GUI
     private State InternalState
     {
       get { return internalState; }
-      set {
+      set
+      {
         internalState = value;
         UpdateInfo();
       }
@@ -45,7 +46,8 @@ namespace NMaier.SimpleDlna.GUI
 
     public void Dispose()
     {
-      if (fileServer != null) {
+      if (fileServer != null)
+      {
         fileServer.Dispose();
         fileServer = null;
       }
@@ -55,15 +57,19 @@ namespace NMaier.SimpleDlna.GUI
     {
       ListView.BeginInvoke((Action)(() =>
       {
-        try {
+        try
+        {
           func();
         }
-        finally {
-          if (ListView != null) {
+        finally
+        {
+          if (ListView != null)
+          {
             var mode = ListView.Items.Count == 0
               ? ColumnHeaderAutoResizeStyle.HeaderSize
               : ColumnHeaderAutoResizeStyle.ColumnContent;
-            foreach (var c in ListView.Columns) {
+            foreach (var c in ListView.Columns)
+            {
               ((ColumnHeader)c).AutoResize(mode);
             }
           }
@@ -73,22 +79,26 @@ namespace NMaier.SimpleDlna.GUI
 
     private void StartFileServer()
     {
-      if (!Description.Active) {
+      if (!Description.Active)
+      {
         InternalState = State.Stopped;
         return;
       }
       var start = DateTime.Now;
-      try {
+      try
+      {
         InternalState = State.Loading;
         var ids = new Identifiers(ComparerRepository.Lookup(Description.Order), Description.OrderDescending);
-        foreach (var v in Description.Views) {
+        foreach (var v in Description.Views)
+        {
           ids.AddView(v);
         }
         var dirs = (from i in Description.Directories
                     let d = new DirectoryInfo(i)
                     where d.Exists
                     select d).ToArray();
-        if (dirs.Length == 0) {
+        if (dirs.Length == 0)
+        {
           throw new InvalidOperationException("No remaining directories");
         }
         fileServer = new FileServer(Description.Types, ids, dirs)
@@ -104,13 +114,16 @@ namespace NMaier.SimpleDlna.GUI
         fileServer.Changed += (o, e) => { InternalState = Description.Active ? State.Running : State.Stopped; };
         fileServer.Load();
         var authorizer = new HttpAuthorizer();
-        if (Description.Ips.Length != 0) {
+        if (Description.Ips.Length != 0)
+        {
           authorizer.AddMethod(new IPAddressAuthorizer(Description.Ips));
         }
-        if (Description.Macs.Length != 0) {
+        if (Description.Macs.Length != 0)
+        {
           authorizer.AddMethod(new MacAuthorizer(Description.Macs));
         }
-        if (Description.UserAgents.Length != 0) {
+        if (Description.UserAgents.Length != 0)
+        {
           authorizer.AddMethod(new UserAgentAuthorizer(Description.UserAgents));
         }
         fileServer.Authorizer = authorizer;
@@ -124,7 +137,8 @@ namespace NMaier.SimpleDlna.GUI
           null
           );
       }
-      catch (Exception ex) {
+      catch (Exception ex)
+      {
         server.ErrorFormat("Failed to start {0}, {1}", Description.Name, ex);
         Description.ToggleActive();
         InternalState = State.Stopped;
@@ -133,7 +147,8 @@ namespace NMaier.SimpleDlna.GUI
 
     private void StopFileServer()
     {
-      if (!Description.Active || fileServer == null) {
+      if (!Description.Active || fileServer == null)
+      {
         return;
       }
       server.UnregisterMediaServer(fileServer);
@@ -164,11 +179,13 @@ namespace NMaier.SimpleDlna.GUI
 
     internal void Rescan()
     {
-      if (fileServer == null) {
+      if (fileServer == null)
+      {
         throw new ArgumentException("Server is not running");
       }
       var vs = fileServer as IVolatileMediaServer;
-      if (vs == null) {
+      if (vs == null)
+      {
         throw new ArgumentException("Server does not support rescanning");
       }
       vs.Rescan();

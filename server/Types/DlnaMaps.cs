@@ -331,22 +331,24 @@ namespace NMaier.SimpleDlna.Server
         {t = DlnaMime.VideoWMV, e = extWMV}
       };
 
-      foreach (var i in extToDLNA) {
+      foreach (var i in extToDLNA)
+      {
         var t = i.t;
-        foreach (var e in i.e) {
+        foreach (var e in i.e)
+        {
           Ext2Dlna.Add(e.ToUpperInvariant(), t);
         }
         Dlna2Ext.Add(i.t, new List<string>(i.e));
       }
 
       InitMedia(
-        new[] {ext3GPP, extAVI, extAVC, extFLV, extMKV, extMPEG, extOGV, extWMV},
+        new[] { ext3GPP, extAVI, extAVC, extFLV, extMKV, extMPEG, extOGV, extWMV },
         DlnaMediaTypes.Video);
       InitMedia(
-        new[] {extJPEG, extPNG, extGIF},
+        new[] { extJPEG, extPNG, extGIF },
         DlnaMediaTypes.Image);
       InitMedia(
-        new[] {extAAC, extFLAC, extMP2, extMP3, extWAV, extVORBIS},
+        new[] { extAAC, extFLAC, extMP2, extMP3, extWAV, extVORBIS },
         DlnaMediaTypes.Audio);
     }
 
@@ -363,16 +365,20 @@ namespace NMaier.SimpleDlna.Server
 
     private static void InitMedia(string[][] k, DlnaMediaTypes t)
     {
-      foreach (var i in k) {
+      foreach (var i in k)
+      {
         var e = (from ext in i
                  select ext.ToUpperInvariant()).ToList();
-        try {
+        try
+        {
           Media2Ext.Add(t, e);
         }
-        catch (ArgumentException) {
+        catch (ArgumentException)
+        {
           Media2Ext[t].AddRange(e);
         }
-        foreach (var ext in e) {
+        foreach (var ext in e)
+        {
           Ext2Media.Add(ext.ToUpperInvariant(), t);
         }
       }

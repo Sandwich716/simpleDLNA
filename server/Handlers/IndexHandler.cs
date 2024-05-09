@@ -18,17 +18,19 @@ namespace NMaier.SimpleDlna.Server
     {
       var article = HtmlTools.CreateHtmlArticle("Index");
       var document = article.OwnerDocument;
-      if (document == null) {
+      if (document == null)
+      {
         throw new HttpStatusException(HttpCode.InternalError);
       }
 
       var list = document.EL("ul");
       var mounts = owner.MediaMounts.OrderBy(m => m.Value, NaturalStringComparer.Comparer);
-      foreach (var m in mounts) {
+      foreach (var m in mounts)
+      {
         var li = document.EL("li");
         li.AppendChild(document.EL(
           "a",
-          new AttributeCollection {{"href", m.Key}},
+          new AttributeCollection { { "href", m.Key } },
           m.Value));
         list.AppendChild(li);
       }

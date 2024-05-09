@@ -13,10 +13,12 @@ namespace NMaier.SimpleDlna.Server
 
     public IPAddressAuthorizer(IEnumerable<IPAddress> addresses)
     {
-      if (addresses == null) {
+      if (addresses == null)
+      {
         throw new ArgumentNullException(nameof(addresses));
       }
-      foreach (var ip in addresses) {
+      foreach (var ip in addresses)
+      {
         ips.Add(ip, null);
       }
     }
@@ -29,7 +31,8 @@ namespace NMaier.SimpleDlna.Server
     public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
     {
       var addr = endPoint?.Address;
-      if (addr == null) {
+      if (addr == null)
+      {
         return false;
       }
       var rv = ips.ContainsKey(addr);

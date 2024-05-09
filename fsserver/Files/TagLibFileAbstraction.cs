@@ -28,7 +28,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public void CloseStream(Stream stream)
     {
-      if (stream == null) {
+      if (stream == null)
+      {
         return;
       }
       stream.Close();

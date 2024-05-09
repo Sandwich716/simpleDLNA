@@ -20,7 +20,8 @@ namespace NMaier.SimpleDlna.Server
 
     public HttpAuthorizer(HttpServer server)
     {
-      if (server == null) {
+      if (server == null)
+      {
         throw new ArgumentNullException(nameof(server));
       }
       this.server = server;
@@ -29,20 +30,24 @@ namespace NMaier.SimpleDlna.Server
 
     public void Dispose()
     {
-      if (server != null) {
+      if (server != null)
+      {
         server.OnAuthorizeClient -= OnAuthorize;
       }
     }
 
     public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
     {
-      if (methods.Count == 0) {
+      if (methods.Count == 0)
+      {
         return true;
       }
-      try {
+      try
+      {
         return methods.Any(m => m.Authorize(headers, endPoint, mac));
       }
-      catch (Exception ex) {
+      catch (Exception ex)
+      {
         Error("Failed to authorize", ex);
         return false;
       }
@@ -59,7 +64,8 @@ namespace NMaier.SimpleDlna.Server
 
     public void AddMethod(IHttpAuthorizationMethod method)
     {
-      if (method == null) {
+      if (method == null)
+      {
         throw new ArgumentNullException(nameof(method));
       }
       methods.Add(method);

@@ -25,32 +25,40 @@ namespace NMaier.SimpleDlna.Server.Views
     protected override void SortFolder(IMediaFolder folder,
       SimpleKeyedVirtualFolder series)
     {
-      foreach (var f in folder.ChildFolders.ToList()) {
+      foreach (var f in folder.ChildFolders.ToList())
+      {
         SortFolder(f, series);
       }
-      foreach (var i in folder.ChildItems.ToList()) {
-        try {
+      foreach (var i in folder.ChildItems.ToList())
+      {
+        try
+        {
           var title = i.Title;
-          if (string.IsNullOrWhiteSpace(title)) {
+          if (string.IsNullOrWhiteSpace(title))
+          {
             throw new Exception("No title");
           }
           var m = regSites.Match(title);
-          if (!m.Success) {
+          if (!m.Success)
+          {
             throw new Exception("No match");
           }
           var site = m.Groups["site"].Value;
-          if (string.IsNullOrEmpty(site)) {
+          if (string.IsNullOrEmpty(site))
+          {
             throw new Exception("No site");
           }
           site = site.Replace(" ", "").Replace("\t", "").Replace("-", "");
           site = regNumberStrip.Replace(site, string.Empty).TrimEnd();
-          if (!regWord.IsMatch(site)) {
+          if (!regWord.IsMatch(site))
+          {
             throw new Exception("Not a site");
           }
           folder.RemoveResource(i);
           series.GetFolder(site.StemNameBase()).AddResource(i);
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
           DebugFormat("{0} - {1}", ex.Message, i.Title);
           folder.RemoveResource(i);
           series.AddResource(i);

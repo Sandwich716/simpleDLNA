@@ -12,12 +12,15 @@ namespace NMaier.SimpleDlna.Server
 
     public MacAuthorizer(IEnumerable<string> macs)
     {
-      if (macs == null) {
+      if (macs == null)
+      {
         throw new ArgumentNullException(nameof(macs));
       }
-      foreach (var m in macs) {
+      foreach (var m in macs)
+      {
         var mac = m.ToUpperInvariant().Trim();
-        if (!IP.IsAcceptedMAC(mac)) {
+        if (!IP.IsAcceptedMAC(mac))
+        {
           throw new FormatException("Invalid MAC supplied");
         }
         this.macs.Add(mac, null);
@@ -26,7 +29,8 @@ namespace NMaier.SimpleDlna.Server
 
     public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
     {
-      if (string.IsNullOrEmpty(mac)) {
+      if (string.IsNullOrEmpty(mac))
+      {
         return false;
       }
 

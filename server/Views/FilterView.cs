@@ -16,10 +16,12 @@ namespace NMaier.SimpleDlna.Server.Views
 
     public override bool Allowed(IMediaResource res)
     {
-      if (res == null) {
+      if (res == null)
+      {
         throw new ArgumentNullException(nameof(res));
       }
-      if (filter == null) {
+      if (filter == null)
+      {
         return true;
       }
       return filter.IsMatch(res.Title) || filter.IsMatch(res.Path);
@@ -28,7 +30,8 @@ namespace NMaier.SimpleDlna.Server.Views
     private static string Escape(string str)
     {
       str = escapes.Aggregate(str, (current, cs) => current.Replace(cs, "\\" + cs));
-      if (str.Contains('*') || str.Contains("?")) {
+      if (str.Contains('*') || str.Contains("?"))
+      {
         str = $"^{str}$";
         str = str.Replace("*", ".*");
         str = str.Replace("?", ".");
@@ -38,7 +41,8 @@ namespace NMaier.SimpleDlna.Server.Views
 
     public void SetParameters(ConfigParameters parameters)
     {
-      if (parameters == null) {
+      if (parameters == null)
+      {
         throw new ArgumentNullException(nameof(parameters));
       }
 
@@ -54,7 +58,8 @@ namespace NMaier.SimpleDlna.Server.Views
 
     public override IMediaFolder Transform(IMediaFolder oldRoot)
     {
-      if (filter == null) {
+      if (filter == null)
+      {
         return oldRoot;
       }
       return base.Transform(oldRoot);

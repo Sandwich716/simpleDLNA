@@ -10,7 +10,8 @@ namespace NMaier.SimpleDlna.GUI
     [STAThread]
     private static void Main()
     {
-      using (var mutex = new Mutex(false, @"Global\simpledlnaguilock")) {
+      using (var mutex = new Mutex(false, @"Global\simpledlnaguilock"))
+      {
 #if !DEBUG
         if (!mutex.WaitOne(0, false)) {
           using (var pipe = new NamedPipeClientStream(
@@ -27,11 +28,14 @@ namespace NMaier.SimpleDlna.GUI
         GC.Collect();
 #endif
 
-        using (var main = new FormMain()) {
-          try {
+        using (var main = new FormMain())
+        {
+          try
+          {
             Application.Run(main);
           }
-          catch (Exception ex) {
+          catch (Exception ex)
+          {
             log4net.LogManager.GetLogger(typeof(Program)).Fatal(
               "Encountered fatal unhandled exception", ex);
             MessageBox.Show(

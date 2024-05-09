@@ -8,14 +8,17 @@ namespace NMaier.SimpleDlna.GUI.Properties
   {
     public Settings()
     {
-      try {
-        if (MustUpgrade) {
+      try
+      {
+        if (MustUpgrade)
+        {
           Upgrade();
           MustUpgrade = false;
           Save();
         }
       }
-      catch (Exception) {
+      catch (Exception)
+      {
       }
     }
 

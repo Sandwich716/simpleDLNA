@@ -21,7 +21,8 @@ namespace NMaier.SimpleDlna.Server.Views
     public T GetFolder(string key)
     {
       T rv;
-      if (!keys.TryGetValue(key, out rv)) {
+      if (!keys.TryGetValue(key, out rv))
+      {
         rv = new T
         {
           Name = key,

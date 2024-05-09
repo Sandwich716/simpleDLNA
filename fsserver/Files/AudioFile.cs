@@ -38,14 +38,17 @@ namespace NMaier.SimpleDlna.FileMediaServer
       genre = info.GetString("g");
       performer = info.GetString("p");
       title = info.GetString("ti");
-      try {
+      try
+      {
         track = info.GetInt32("tr");
       }
-      catch (Exception) {
+      catch (Exception)
+      {
         // no op
       }
       var ts = info.GetInt64("d");
-      if (ts > 0) {
+      if (ts > 0)
+      {
         duration = new TimeSpan(ts);
       }
       initialized = true;
@@ -64,8 +67,10 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override IMediaCoverResource Cover
     {
-      get {
-        if (CachedCover == null && !LoadCoverFromCache()) {
+      get
+      {
+        if (CachedCover == null && !LoadCoverFromCache())
+        {
           MaybeInit();
         }
         return CachedCover;
@@ -74,7 +79,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaAlbum
     {
-      get {
+      get
+      {
         MaybeInit();
         return album;
       }
@@ -82,7 +88,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaArtist
     {
-      get {
+      get
+      {
         MaybeInit();
         return artist;
       }
@@ -90,7 +97,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaDescription
     {
-      get {
+      get
+      {
         MaybeInit();
         return description;
       }
@@ -98,7 +106,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public TimeSpan? MetaDuration
     {
-      get {
+      get
+      {
         MaybeInit();
         return duration;
       }
@@ -106,7 +115,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaGenre
     {
-      get {
+      get
+      {
         MaybeInit();
         return genre;
       }
@@ -114,7 +124,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaPerformer
     {
-      get {
+      get
+      {
         MaybeInit();
         return performer;
       }
@@ -122,7 +133,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public int? MetaTrack
     {
-      get {
+      get
+      {
         MaybeInit();
         return track;
       }
@@ -130,28 +142,36 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override IHeaders Properties
     {
-      get {
+      get
+      {
         MaybeInit();
         var rv = base.Properties;
-        if (album != null) {
+        if (album != null)
+        {
           rv.Add("Album", album);
         }
-        if (artist != null) {
+        if (artist != null)
+        {
           rv.Add("Artist", artist);
         }
-        if (description != null) {
+        if (description != null)
+        {
           rv.Add("Description", description);
         }
-        if (duration != null) {
+        if (duration != null)
+        {
           rv.Add("Duration", duration.Value.ToString("g"));
         }
-        if (genre != null) {
+        if (genre != null)
+        {
           rv.Add("Genre", genre);
         }
-        if (performer != null) {
+        if (performer != null)
+        {
           rv.Add("Performer", performer);
         }
-        if (track != null) {
+        if (track != null)
+        {
           rv.Add("Track", track.Value.ToString());
         }
         return rv;
@@ -160,10 +180,13 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override string Title
     {
-      get {
+      get
+      {
         MaybeInit();
-        if (!string.IsNullOrWhiteSpace(title)) {
-          if (track.HasValue) {
+        if (!string.IsNullOrWhiteSpace(title))
+        {
+          if (track.HasValue)
+          {
             return $"{track.Value:D2}. — {title}";
           }
           return title;
@@ -174,10 +197,12 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override int CompareTo(IMediaItem other)
     {
-      if (track.HasValue) {
+      if (track.HasValue)
+      {
         var oa = other as AudioFile;
         int rv;
-        if (oa?.track != null && (rv = track.Value.CompareTo(oa.track.Value)) != 0) {
+        if (oa?.track != null && (rv = track.Value.CompareTo(oa.track.Value)) != 0)
+        {
           return rv;
         }
       }
@@ -186,7 +211,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public void GetObjectData(SerializationInfo info, StreamingContext ctx)
     {
-      if (info == null) {
+      if (info == null)
+      {
         throw new ArgumentNullException(nameof(info));
       }
       info.AddValue("al", album);
@@ -202,29 +228,36 @@ namespace NMaier.SimpleDlna.FileMediaServer
     private void InitCover(Tag tag)
     {
       IPicture pic = null;
-      foreach (var p in tag.Pictures) {
-        if (p.Type == PictureType.FrontCover) {
+      foreach (var p in tag.Pictures)
+      {
+        if (p.Type == PictureType.FrontCover)
+        {
           pic = p;
           break;
         }
-        switch (p.Type) {
-        case PictureType.Other:
-        case PictureType.OtherFileIcon:
-        case PictureType.FileIcon:
-          pic = p;
-          break;
-        default:
-          if (pic == null) {
+        switch (p.Type)
+        {
+          case PictureType.Other:
+          case PictureType.OtherFileIcon:
+          case PictureType.FileIcon:
             pic = p;
-          }
-          break;
+            break;
+          default:
+            if (pic == null)
+            {
+              pic = p;
+            }
+            break;
         }
       }
-      if (pic != null) {
-        try {
+      if (pic != null)
+      {
+        try
+        {
           CachedCover = new Cover(Item, pic.Data.ToStream());
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
           Debug("Failed to generate thumb for " + Item.FullName, ex);
         }
       }
@@ -232,28 +265,36 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     private void MaybeInit()
     {
-      if (initialized) {
+      if (initialized)
+      {
         return;
       }
 
-      try {
-        using (var tl = File.Create(new TagLibFileAbstraction(Item))) {
-          try {
+      try
+      {
+        using (var tl = File.Create(new TagLibFileAbstraction(Item)))
+        {
+          try
+          {
             duration = tl.Properties.Duration;
-            if (duration.Value.TotalSeconds < 0.1) {
+            if (duration.Value.TotalSeconds < 0.1)
+            {
               duration = null;
             }
           }
-          catch (Exception ex) {
+          catch (Exception ex)
+          {
             Debug("Failed to transpose Properties props", ex);
           }
 
-          try {
+          try
+          {
             var t = tl.Tag;
             SetProperties(t);
             InitCover(t);
           }
-          catch (Exception ex) {
+          catch (Exception ex)
+          {
             Debug("Failed to transpose Tag props", ex);
           }
         }
@@ -262,17 +303,20 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
         Server.UpdateFileCache(this);
       }
-      catch (CorruptFileException ex) {
+      catch (CorruptFileException ex)
+      {
         Debug(
           "Failed to read meta data via taglib for file " + Item.FullName, ex);
         initialized = true;
       }
-      catch (UnsupportedFormatException ex) {
+      catch (UnsupportedFormatException ex)
+      {
         Debug(
           "Failed to read meta data via taglib for file " + Item.FullName, ex);
         initialized = true;
       }
-      catch (Exception ex) {
+      catch (Exception ex)
+      {
         Warn(
           "Unhandled exception reading meta data for file " + Item.FullName,
           ex);
@@ -282,43 +326,52 @@ namespace NMaier.SimpleDlna.FileMediaServer
     private void SetProperties(Tag tag)
     {
       genre = tag.FirstGenre;
-      if (string.IsNullOrWhiteSpace(genre)) {
+      if (string.IsNullOrWhiteSpace(genre))
+      {
         genre = null;
       }
 
-      if (tag.Track != 0 && tag.Track < 1 << 10) {
+      if (tag.Track != 0 && tag.Track < 1 << 10)
+      {
         track = (int)tag.Track;
       }
 
 
       title = tag.Title;
-      if (string.IsNullOrWhiteSpace(title)) {
+      if (string.IsNullOrWhiteSpace(title))
+      {
         title = null;
       }
 
       description = tag.Comment;
-      if (string.IsNullOrWhiteSpace(description)) {
+      if (string.IsNullOrWhiteSpace(description))
+      {
         description = null;
       }
 
       performer = string.IsNullOrWhiteSpace(artist) ? tag.JoinedPerformers : tag.JoinedPerformersSort;
-      if (string.IsNullOrWhiteSpace(performer)) {
+      if (string.IsNullOrWhiteSpace(performer))
+      {
         performer = null;
       }
 
       artist = tag.JoinedAlbumArtists;
-      if (string.IsNullOrWhiteSpace(artist)) {
+      if (string.IsNullOrWhiteSpace(artist))
+      {
         artist = tag.JoinedComposers;
       }
-      if (string.IsNullOrWhiteSpace(artist)) {
+      if (string.IsNullOrWhiteSpace(artist))
+      {
         artist = null;
       }
 
       album = tag.AlbumSort;
-      if (string.IsNullOrWhiteSpace(album)) {
+      if (string.IsNullOrWhiteSpace(album))
+      {
         album = tag.Album;
       }
-      if (string.IsNullOrWhiteSpace(album)) {
+      if (string.IsNullOrWhiteSpace(album))
+      {
         album = null;
       }
     }

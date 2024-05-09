@@ -10,7 +10,8 @@ namespace NMaier.Windows.Forms
   {
     static Form()
     {
-      if (LicenseManager.UsageMode != LicenseUsageMode.Runtime) {
+      if (LicenseManager.UsageMode != LicenseUsageMode.Runtime)
+      {
         return;
       }
       win::Application.EnableVisualStyles();
@@ -40,16 +41,20 @@ namespace NMaier.Windows.Forms
 
     public static void SetFlatStyle(object control)
     {
-      if (!(control is win::Button)) {
+      if (!(control is win::Button))
+      {
         var t = control.GetType();
         var p = t.GetProperty("FlatStyle", typeof(win::FlatStyle));
-        if (p != null && p.CanWrite) {
+        if (p != null && p.CanWrite)
+        {
           p.SetValue(control, win::FlatStyle.System, null);
         }
       }
       var ctrl = control as win::Control;
-      if (ctrl != null) {
-        foreach (var sc in ctrl.Controls) {
+      if (ctrl != null)
+      {
+        foreach (var sc in ctrl.Controls)
+        {
           SetFlatStyle(sc);
         }
       }

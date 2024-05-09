@@ -46,7 +46,8 @@ namespace NMaier.SimpleDlna.Utilities
     {
       get { return items[key].Value.Value; }
       [MethodImpl(MethodImplOptions.Synchronized)]
-      set {
+      set
+      {
         Remove(key);
         Add(key, value);
       }
@@ -74,7 +75,8 @@ namespace NMaier.SimpleDlna.Utilities
     public void Clear()
     {
       items.Clear();
-      lock (order) {
+      lock (order)
+      {
         order.Clear();
       }
     }
@@ -103,8 +105,10 @@ namespace NMaier.SimpleDlna.Utilities
     public bool Remove(TKey key)
     {
       LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      if (items.TryRemove(key, out node)) {
-        lock (order) {
+      if (items.TryRemove(key, out node))
+      {
+        lock (order)
+        {
           order.Remove(node);
         }
         return true;
@@ -116,8 +120,10 @@ namespace NMaier.SimpleDlna.Utilities
     public bool Remove(KeyValuePair<TKey, TValue> item)
     {
       LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      if (items.TryRemove(item.Key, out node)) {
-        lock (order) {
+      if (items.TryRemove(item.Key, out node))
+      {
+        lock (order)
+        {
           order.Remove(node);
         }
         return true;
@@ -128,7 +134,8 @@ namespace NMaier.SimpleDlna.Utilities
     public bool TryGetValue(TKey key, out TValue value)
     {
       LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      if (items.TryGetValue(key, out node)) {
+      if (items.TryGetValue(key, out node))
+      {
         value = node.Value.Value;
         return true;
       }
@@ -138,14 +145,18 @@ namespace NMaier.SimpleDlna.Utilities
 
     private TValue MaybeDropSome()
     {
-      if (Count <= Capacity) {
+      if (Count <= Capacity)
+      {
         return default(TValue);
       }
-      lock (order) {
+      lock (order)
+      {
         var rv = default(TValue);
-        for (var i = 0; i < toDrop; ++i) {
+        for (var i = 0; i < toDrop; ++i)
+        {
           LinkedListNode<KeyValuePair<TKey, TValue>> item;
-          if (items.TryRemove(order.Last.Value.Key, out item)) {
+          if (items.TryRemove(order.Last.Value.Key, out item))
+          {
             rv = item.Value.Value;
           }
           order.RemoveLast();
@@ -158,7 +169,8 @@ namespace NMaier.SimpleDlna.Utilities
     public TValue AddAndPop(KeyValuePair<TKey, TValue> item)
     {
       LinkedListNode<KeyValuePair<TKey, TValue>> node;
-      lock (order) {
+      lock (order)
+      {
         node = order.AddFirst(item);
       }
       items.TryAdd(item.Key, node);

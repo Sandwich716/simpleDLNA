@@ -7,10 +7,12 @@ namespace NMaier.SimpleDlna.Utilities
   {
     public static string Company
     {
-      get {
+      get
+      {
         var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(
-          typeof (AssemblyCompanyAttribute), false);
-        if (attributes.Length == 0) {
+          typeof(AssemblyCompanyAttribute), false);
+        if (attributes.Length == 0)
+        {
           return string.Empty;
         }
         return ((AssemblyCompanyAttribute)attributes[0]).Company;
@@ -19,10 +21,12 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static string Copyright
     {
-      get {
+      get
+      {
         var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(
-          typeof (AssemblyCopyrightAttribute), false);
-        if (attributes.Length == 0) {
+          typeof(AssemblyCopyrightAttribute), false);
+        if (attributes.Length == 0)
+        {
           return string.Empty;
         }
         return ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
@@ -31,10 +35,12 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static string ProductVersion
     {
-      get {
+      get
+      {
         var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(
-          typeof (AssemblyInformationalVersionAttribute), false);
-        if (attributes.Length == 0) {
+          typeof(AssemblyInformationalVersionAttribute), false);
+        if (attributes.Length == 0)
+        {
           return string.Empty;
         }
         var infoVersionAttr =
@@ -45,12 +51,15 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static string Title
     {
-      get {
+      get
+      {
         var attributes = Assembly.GetEntryAssembly().GetCustomAttributes(
-          typeof (AssemblyTitleAttribute), false);
-        if (attributes.Length > 0) {
+          typeof(AssemblyTitleAttribute), false);
+        if (attributes.Length > 0)
+        {
           var titleAttribute = (AssemblyTitleAttribute)attributes[0];
-          if (!string.IsNullOrWhiteSpace(titleAttribute.Title)) {
+          if (!string.IsNullOrWhiteSpace(titleAttribute.Title))
+          {
             return titleAttribute.Title;
           }
         }

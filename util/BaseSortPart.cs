@@ -13,17 +13,21 @@ namespace NMaier.SimpleDlna.Utilities
 
     public int CompareTo(BaseSortPart other)
     {
-      if (other == null) {
+      if (other == null)
+      {
         return 1;
       }
-      if (type != other.type) {
-        if (type == typeof (StringSortPart)) {
+      if (type != other.type)
+      {
+        if (type == typeof(StringSortPart))
+        {
           return 1;
         }
         return -1;
       }
       var sp = other as StringSortPart;
-      if (sp != null) {
+      if (sp != null)
+      {
         return ((StringSortPart)this).CompareTo(sp);
       }
       return ((NumericSortPart)this).CompareTo(
