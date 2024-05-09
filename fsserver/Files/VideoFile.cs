@@ -43,32 +43,39 @@ namespace NMaier.SimpleDlna.FileMediaServer
     private VideoFile(SerializationInfo info, DeserializeInfo di)
       : this(di.Server, di.Info, di.Type)
     {
-      actors = info.GetValue("a", typeof (string[])) as string[];
+      actors = info.GetValue("a", typeof(string[])) as string[];
       description = info.GetString("de");
       director = info.GetString("di");
       genre = info.GetString("g");
       title = info.GetString("t");
-      try {
+      try
+      {
         width = info.GetInt32("w");
         height = info.GetInt32("h");
       }
-      catch (Exception) {
+      catch (Exception)
+      {
         // ignored
       }
       var ts = info.GetInt64("du");
-      if (ts > 0) {
+      if (ts > 0)
+      {
         duration = new TimeSpan(ts);
       }
-      try {
+      try
+      {
         bookmark = info.GetInt64("b");
       }
-      catch (Exception) {
+      catch (Exception)
+      {
         bookmark = 0;
       }
-      try {
-        subTitle = info.GetValue("st", typeof (Subtitle)) as Subtitle;
+      try
+      {
+        subTitle = info.GetValue("st", typeof(Subtitle)) as Subtitle;
       }
-      catch (Exception) {
+      catch (Exception)
+      {
         subTitle = null;
       }
       initialized = true;
@@ -82,7 +89,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
     public long? Bookmark
     {
       get { return bookmark; }
-      set {
+      set
+      {
         bookmark = value;
         Server.UpdateFileCache(this);
       }
@@ -90,7 +98,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public IEnumerable<string> MetaActors
     {
-      get {
+      get
+      {
         MaybeInit();
         return actors;
       }
@@ -98,7 +107,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaDescription
     {
-      get {
+      get
+      {
         MaybeInit();
         return description;
       }
@@ -106,7 +116,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaDirector
     {
-      get {
+      get
+      {
         MaybeInit();
         return director;
       }
@@ -114,7 +125,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public TimeSpan? MetaDuration
     {
-      get {
+      get
+      {
         MaybeInit();
         return duration;
       }
@@ -122,9 +134,11 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public string MetaGenre
     {
-      get {
+      get
+      {
         MaybeInit();
-        if (string.IsNullOrWhiteSpace(genre)) {
+        if (string.IsNullOrWhiteSpace(genre))
+        {
           throw new NotSupportedException();
         }
         return genre;
@@ -133,7 +147,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public int? MetaHeight
     {
-      get {
+      get
+      {
         MaybeInit();
         return height;
       }
@@ -141,7 +156,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public int? MetaWidth
     {
-      get {
+      get
+      {
         MaybeInit();
         return width;
       }
@@ -149,25 +165,32 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override IHeaders Properties
     {
-      get {
+      get
+      {
         MaybeInit();
         var rv = base.Properties;
-        if (description != null) {
+        if (description != null)
+        {
           rv.Add("Description", description);
         }
-        if (actors != null && actors.Length != 0) {
+        if (actors != null && actors.Length != 0)
+        {
           rv.Add("Actors", string.Join(", ", actors));
         }
-        if (director != null) {
+        if (director != null)
+        {
           rv.Add("Director", director);
         }
-        if (duration != null) {
+        if (duration != null)
+        {
           rv.Add("Duration", duration.Value.ToString("g"));
         }
-        if (genre != null) {
+        if (genre != null)
+        {
           rv.Add("Genre", genre);
         }
-        if (width != null && height != null) {
+        if (width != null && height != null)
+        {
           rv.Add(
             "Resolution",
             $"{width.Value}x{height.Value}"
@@ -179,14 +202,18 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public Subtitle Subtitle
     {
-      get {
-        try {
-          if (subTitle == null) {
+      get
+      {
+        try
+        {
+          if (subTitle == null)
+          {
             subTitle = new Subtitle(Item);
             Server.UpdateFileCache(this);
           }
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
           Error("Failed to look up subtitle", ex);
           subTitle = new Subtitle();
         }
@@ -196,8 +223,10 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override string Title
     {
-      get {
-        if (!string.IsNullOrWhiteSpace(title)) {
+      get
+      {
+        if (!string.IsNullOrWhiteSpace(title))
+        {
           return $"{base.Title} — {title}";
         }
         return base.Title;
@@ -206,11 +235,12 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
-      if (info == null) {
+      if (info == null)
+      {
         throw new ArgumentNullException(nameof(info));
       }
       MaybeInit();
-      info.AddValue("a", actors, typeof (string[]));
+      info.AddValue("a", actors, typeof(string[]));
       info.AddValue("de", description);
       info.AddValue("di", director);
       info.AddValue("g", genre);
@@ -224,45 +254,57 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     private void MaybeInit()
     {
-      if (initialized) {
+      if (initialized)
+      {
         return;
       }
 
-      try {
-        using (var tl = File.Create(new TagLibFileAbstraction(Item))) {
-          try {
+      try
+      {
+        using (var tl = File.Create(new TagLibFileAbstraction(Item)))
+        {
+          try
+          {
             duration = tl.Properties.Duration;
-            if (duration.Value.TotalSeconds < 0.1) {
+            if (duration.Value.TotalSeconds < 0.1)
+            {
               duration = null;
             }
             width = tl.Properties.VideoWidth;
             height = tl.Properties.VideoHeight;
           }
-          catch (Exception ex) {
+          catch (Exception ex)
+          {
             Debug("Failed to transpose Properties props", ex);
           }
 
-          try {
+          try
+          {
             var t = tl.Tag;
             genre = t.FirstGenre;
             title = t.Title;
             description = t.Comment;
             director = t.FirstComposerSort;
-            if (string.IsNullOrWhiteSpace(director)) {
+            if (string.IsNullOrWhiteSpace(director))
+            {
               director = t.FirstComposer;
             }
             actors = t.PerformersSort;
-            if (actors == null || actors.Length == 0) {
+            if (actors == null || actors.Length == 0)
+            {
               actors = t.PerformersSort;
-              if (actors == null || actors.Length == 0) {
+              if (actors == null || actors.Length == 0)
+              {
                 actors = t.Performers;
-                if (actors == null || actors.Length == 0) {
+                if (actors == null || actors.Length == 0)
+                {
                   actors = t.AlbumArtists;
                 }
               }
             }
           }
-          catch (Exception ex) {
+          catch (Exception ex)
+          {
             Debug("Failed to transpose Tag props", ex);
           }
         }
@@ -271,17 +313,20 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
         Server.UpdateFileCache(this);
       }
-      catch (CorruptFileException ex) {
+      catch (CorruptFileException ex)
+      {
         Debug(
           "Failed to read meta data via taglib for file " + Item.FullName, ex);
         initialized = true;
       }
-      catch (UnsupportedFormatException ex) {
+      catch (UnsupportedFormatException ex)
+      {
         Debug(
           "Failed to read meta data via taglib for file " + Item.FullName, ex);
         initialized = true;
       }
-      catch (Exception ex) {
+      catch (Exception ex)
+      {
         Warn(
           "Unhandled exception reading meta data for file " + Item.FullName,
           ex);

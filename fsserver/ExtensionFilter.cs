@@ -11,14 +11,16 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public ExtensionFilter(IEnumerable<string> extensions)
     {
-      foreach (var e in extensions) {
+      foreach (var e in extensions)
+      {
         exts.Add(e, null);
       }
     }
 
     public bool Filtered(string extension)
     {
-      if (string.IsNullOrEmpty(extension)) {
+      if (string.IsNullOrEmpty(extension))
+      {
         return false;
       }
       return exts.ContainsKey(extension);

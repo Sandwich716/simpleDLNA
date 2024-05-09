@@ -12,11 +12,14 @@ namespace NMaier.SimpleDlna.Server
 
     public UserAgentAuthorizer(IEnumerable<string> userAgents)
     {
-      if (userAgents == null) {
+      if (userAgents == null)
+      {
         throw new ArgumentNullException(nameof(userAgents));
       }
-      foreach (var u in userAgents) {
-        if (string.IsNullOrEmpty(u)) {
+      foreach (var u in userAgents)
+      {
+        if (string.IsNullOrEmpty(u))
+        {
           throw new FormatException("Invalid User-Agent supplied");
         }
         this.userAgents.Add(u, null);
@@ -25,14 +28,17 @@ namespace NMaier.SimpleDlna.Server
 
     public bool Authorize(IHeaders headers, IPEndPoint endPoint, string mac)
     {
-      if (headers == null) {
+      if (headers == null)
+      {
         throw new ArgumentNullException(nameof(headers));
       }
       string ua;
-      if (!headers.TryGetValue("User-Agent", out ua)) {
+      if (!headers.TryGetValue("User-Agent", out ua))
+      {
         return false;
       }
-      if (string.IsNullOrEmpty(ua)) {
+      if (string.IsNullOrEmpty(ua))
+      {
         return false;
       }
       var rv = userAgents.ContainsKey(ua);

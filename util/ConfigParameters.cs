@@ -12,7 +12,8 @@ namespace NMaier.SimpleDlna.Utilities
 
     public ConfigParameters(string parameters)
     {
-      foreach (var valuesplit in parameters.Split(',').Select(p => p.Split(new[] {'='}, 2))) {
+      foreach (var valuesplit in parameters.Split(',').Select(p => p.Split(new[] { '=' }, 2)))
+      {
         Add(valuesplit[0], valuesplit.Length == 2 ? valuesplit[1] : null);
       }
     }
@@ -26,39 +27,48 @@ namespace NMaier.SimpleDlna.Utilities
     {
       rv = new TValue();
       var convertible = rv as IConvertible;
-      if (convertible == null) {
+      if (convertible == null)
+      {
         throw new NotSupportedException("Not convertible");
       }
-      switch (convertible.GetTypeCode()) {
-      case TypeCode.Boolean:
-        foreach (var val in GetValuesForKey(key, comparer)) {
-          try {
-            rv = (TValue)(object)Formatting.Booley(val);
-            return true;
-          }
-          catch (Exception) {
-            // ignored
-          }
-        }
-        break;
-      case TypeCode.Object:
-        throw new NotSupportedException("Non pod types are not supported");
-      default:
-        var conv = TypeDescriptor.GetConverter(typeof (TValue));
-        foreach (var val in GetValuesForKey(key, comparer)) {
-          try {
-            var converted = conv.ConvertFromString(val);
-            if (converted == null) {
-              continue;
+      switch (convertible.GetTypeCode())
+      {
+        case TypeCode.Boolean:
+          foreach (var val in GetValuesForKey(key, comparer))
+          {
+            try
+            {
+              rv = (TValue)(object)Formatting.Booley(val);
+              return true;
             }
-            rv = (TValue)converted;
-            return true;
+            catch (Exception)
+            {
+              // ignored
+            }
           }
-          catch (Exception) {
-            // ignored
+          break;
+        case TypeCode.Object:
+          throw new NotSupportedException("Non pod types are not supported");
+        default:
+          var conv = TypeDescriptor.GetConverter(typeof(TValue));
+          foreach (var val in GetValuesForKey(key, comparer))
+          {
+            try
+            {
+              var converted = conv.ConvertFromString(val);
+              if (converted == null)
+              {
+                continue;
+              }
+              rv = (TValue)converted;
+              return true;
+            }
+            catch (Exception)
+            {
+              // ignored
+            }
           }
-        }
-        break;
+          break;
       }
       return false;
     }
@@ -84,7 +94,8 @@ namespace NMaier.SimpleDlna.Utilities
     {
       TValue? rv = null;
       TValue attempt;
-      if (TryGet(key, out attempt, comparer)) {
+      if (TryGet(key, out attempt, comparer))
+      {
         rv = attempt;
       }
       return rv;

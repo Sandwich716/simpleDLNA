@@ -6,7 +6,7 @@ namespace NMaier.SimpleDlna.FileMediaServer
   internal sealed class FileReadStream : FileStream
   {
     private static readonly ILog logger =
-      LogManager.GetLogger(typeof (FileReadStream));
+      LogManager.GetLogger(typeof(FileReadStream));
 
     private readonly FileInfo info;
 
@@ -32,7 +32,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     public override void Close()
     {
-      if (!killed) {
+      if (!killed)
+      {
         FileStreamCache.Recycle(this);
         return;
       }
@@ -42,7 +43,8 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     protected override void Dispose(bool disposing)
     {
-      if (!killed) {
+      if (!killed)
+      {
         return;
       }
       base.Dispose(disposing);

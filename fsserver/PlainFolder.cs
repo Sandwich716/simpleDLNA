@@ -19,19 +19,24 @@ namespace NMaier.SimpleDlna.FileMediaServer
       var rawfiles = from f in dir.GetFiles("*.*")
                      select f;
       var files = new List<BaseFile>();
-      foreach (var f in rawfiles) {
+      foreach (var f in rawfiles)
+      {
         var ext = f.Extension;
         if (string.IsNullOrEmpty(ext) ||
-            !server.Filter.Filtered(ext.Substring(1))) {
+            !server.Filter.Filtered(ext.Substring(1)))
+        {
           continue;
         }
-        try {
+        try
+        {
           var file = server.GetFile(this, f);
-          if (server.Allowed(file)) {
+          if (server.Allowed(file))
+          {
             files.Add(file);
           }
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
           server.Warn(f, ex);
         }
       }
@@ -55,11 +60,14 @@ namespace NMaier.SimpleDlna.FileMediaServer
 
     private PlainFolder TryGetFolder(FileServer server, DirectoryInfo d)
     {
-      try {
+      try
+      {
         return new PlainFolder(server, this, d);
       }
-      catch (Exception ex) {
-        if (!d.Name.Equals("System Volume Information")) {
+      catch (Exception ex)
+      {
+        if (!d.Name.Equals("System Volume Information"))
+        {
           server.Warn("Failed to access folder", ex);
         }
         return null;

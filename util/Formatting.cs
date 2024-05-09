@@ -24,7 +24,8 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static bool Booley(string maybeBoolean)
     {
-      if (maybeBoolean == null) {
+      if (maybeBoolean == null)
+      {
         throw new ArgumentNullException(nameof(maybeBoolean));
       }
       maybeBoolean = maybeBoolean.Trim();
@@ -34,23 +35,28 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static string FormatFileSize(this long size)
     {
-      if (size < 900) {
+      if (size < 900)
+      {
         return $"{size} B";
       }
       var ds = size / 1024.0;
-      if (ds < 900) {
+      if (ds < 900)
+      {
         return $"{ds:F2} KB";
       }
       ds /= 1024.0;
-      if (ds < 900) {
+      if (ds < 900)
+      {
         return $"{ds:F2} MB";
       }
       ds /= 1024.0;
-      if (ds < 900) {
+      if (ds < 900)
+      {
         return $"{ds:F3} GB";
       }
       ds /= 1024.0;
-      if (ds < 900) {
+      if (ds < 900)
+      {
         return $"{ds:F3} TB";
       }
       ds /= 1024.0;
@@ -61,7 +67,8 @@ namespace NMaier.SimpleDlna.Utilities
     {
       var buf = Marshal.AllocHGlobal(8192);
       // This is a hacktastic way of getting sysname from uname ()
-      if (SafeNativeMethods.uname(buf) != 0) {
+      if (SafeNativeMethods.uname(buf) != 0)
+      {
         throw new ArgumentException("Failed to get uname");
       }
       var rv = Marshal.PtrToStringAnsi(buf);
@@ -71,14 +78,16 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static string StemCompareBase(this string name)
     {
-      if (name == null) {
+      if (name == null)
+      {
         throw new ArgumentNullException(nameof(name));
       }
 
       var san = trimmore.Replace(
         sanitizer.Replace(name, string.Empty),
         string.Empty).Trim();
-      if (string.IsNullOrWhiteSpace(san)) {
+      if (string.IsNullOrWhiteSpace(san))
+      {
         return name;
       }
       return san.StemNameBase();
@@ -86,24 +95,29 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static string StemNameBase(this string name)
     {
-      if (name == null) {
+      if (name == null)
+      {
         throw new ArgumentNullException(nameof(name));
       }
 
-      if (!name.Contains(" ")) {
+      if (!name.Contains(" "))
+      {
         name = name.Replace('_', ' ');
-        if (!name.Contains(" ")) {
+        if (!name.Contains(" "))
+        {
           name = name.Replace('-', ' ');
         }
         name = respace.Replace(name, " ");
       }
       var ws = name;
       string wsprev;
-      do {
+      do
+      {
         wsprev = ws;
         ws = trim.Replace(wsprev.Trim(), " ").Trim();
       } while (wsprev != ws);
-      if (string.IsNullOrWhiteSpace(ws)) {
+      if (string.IsNullOrWhiteSpace(ws))
+      {
         return name;
       }
       return ws;

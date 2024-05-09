@@ -16,13 +16,14 @@ namespace NMaier.SimpleDlna.GUI
 
     public StartupUtilities(StartupUserScope userScope)
     {
-      switch (userScope) {
-      default:
-        appKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-        break;
-      case StartupUserScope.AllUsers:
-        appKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-        break;
+      switch (userScope)
+      {
+        default:
+          appKey = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+          break;
+        case StartupUserScope.AllUsers:
+          appKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+          break;
       }
     }
 

@@ -41,13 +41,13 @@ namespace NMaier.SimpleDlna.Server
       var footer = document.EL("footer");
       footer.AppendChild(document.EL(
         "img",
-        new AttributeCollection {{"src", "/icon/smallPNG"}}
+        new AttributeCollection { { "src", "/icon/smallPNG" } }
                            ));
       footer.AppendChild(document.EL("h3",
                                      $"SimpleDLNA Media Server: sdlna/{Assembly.GetExecutingAssembly().GetName().Version.Major}.{Assembly.GetExecutingAssembly().GetName().Version.Minor}"));
       footer.AppendChild(document.EL(
         "p",
-        new AttributeCollection {{"class", "desc"}},
+        new AttributeCollection { { "class", "desc" } },
         "A simple, zero-config DLNA media server, that you can just fire up and be done with it."
                            ));
       footer.AppendChild(document.EL(

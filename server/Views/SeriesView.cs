@@ -23,20 +23,25 @@ namespace NMaier.SimpleDlna.Server.Views
     protected override void SortFolder(IMediaFolder folder,
       SimpleKeyedVirtualFolder series)
     {
-      foreach (var f in folder.ChildFolders.ToList()) {
+      foreach (var f in folder.ChildFolders.ToList())
+      {
         SortFolder(f, series);
       }
-      foreach (var i in folder.ChildItems.ToList()) {
+      foreach (var i in folder.ChildItems.ToList())
+      {
         var title = i.Title;
-        if (string.IsNullOrWhiteSpace(title)) {
+        if (string.IsNullOrWhiteSpace(title))
+        {
           continue;
         }
         var m = regSeries.Match(title);
-        if (!m.Success) {
+        if (!m.Success)
+        {
           continue;
         }
         var ser = m.Groups[1].Value;
-        if (string.IsNullOrEmpty(ser)) {
+        if (string.IsNullOrEmpty(ser))
+        {
           continue;
         }
         series.GetFolder(ser.StemNameBase()).AddResource(i);

@@ -26,16 +26,20 @@ namespace NMaier.SimpleDlna.Server.Views
                      f = f as VirtualFolder,
                      t = t as VirtualFolder
                    };
-      foreach (var m in merges.ToList()) {
+      foreach (var m in merges.ToList())
+      {
         MergeFolders(m.f, m.t);
-        foreach (var c in m.f.ChildFolders.ToList()) {
+        foreach (var c in m.f.ChildFolders.ToList())
+        {
           m.t.AdoptFolder(c);
         }
-        foreach (var c in m.f.ChildItems.ToList()) {
+        foreach (var c in m.f.ChildItems.ToList())
+        {
           m.t.AddResource(c);
           m.f.RemoveResource(c);
         }
-        if (aFrom != aTo) {
+        if (aFrom != aTo)
+        {
           ((VirtualFolder)m.f.Parent).ReleaseFolder(m.f);
         }
       }

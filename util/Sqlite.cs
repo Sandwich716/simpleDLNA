@@ -16,30 +16,35 @@ namespace NMaier.SimpleDlna.Utilities
     private static IDbConnection GetDatabaseConnectionMono(string cs)
     {
       Assembly monoSqlite;
-      try {
+      try
+      {
         monoSqlite = Assembly.Load(
           "Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
       }
-      catch (Exception) {
+      catch (Exception)
+      {
         monoSqlite = Assembly.Load(
           "Mono.Data.Sqlite, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756");
       }
       var dbconn = monoSqlite.GetType(
         "Mono.Data.Sqlite.SqliteConnection");
-      var ctor = dbconn.GetConstructor(new[] {typeof (string)});
-      if (ctor == null) {
+      var ctor = dbconn.GetConstructor(new[] { typeof(string) });
+      if (ctor == null)
+      {
         throw new ArgumentException("No mono SQLite found");
       }
-      var rv = ctor.Invoke(new object[] {cs}) as IDbConnection;
-      if (rv == null) {
+      var rv = ctor.Invoke(new object[] { cs }) as IDbConnection;
+      if (rv == null)
+      {
         throw new ArgumentException("no connection");
       }
       rv.Open();
-      if (clearPool == null) {
+      if (clearPool == null)
+      {
         var cp = dbconn.GetMethod("ClearPool");
         clearPool = conn =>
         {
-          cp?.Invoke(null, new object[] {conn});
+          cp?.Invoke(null, new object[] { conn });
         };
       }
       return rv;
@@ -48,20 +53,24 @@ namespace NMaier.SimpleDlna.Utilities
     private static IDbConnection GetDatabaseConnectionSDS(string cs)
     {
       var rv = new SQLiteConnection(cs);
-      if (rv == null) {
+      if (rv == null)
+      {
         throw new ArgumentException("no connection");
       }
       rv.Open();
 
-      try {
+      try
+      {
         rv.SetChunkSize(GROW_SIZE);
       }
-      catch (Exception ex) {
-        LogManager.GetLogger(typeof (Sqlite)).Error(
+      catch (Exception ex)
+      {
+        LogManager.GetLogger(typeof(Sqlite)).Error(
           "Failed to sqlite control", ex);
       }
 
-      if (clearPool == null) {
+      if (clearPool == null)
+      {
         clearPool = conn =>
         {
           SQLiteConnection.ClearPool(
@@ -78,10 +87,12 @@ namespace NMaier.SimpleDlna.Utilities
 
     public static IDbConnection GetDatabaseConnection(FileInfo database)
     {
-      if (database == null) {
+      if (database == null)
+      {
         throw new ArgumentNullException(nameof(database));
       }
-      if (database.Exists && database.IsReadOnly) {
+      if (database.Exists && database.IsReadOnly)
+      {
         throw new ArgumentException(
           "Database file is read only",
           nameof(database)
@@ -89,7 +100,8 @@ namespace NMaier.SimpleDlna.Utilities
       }
       var cs = $"Uri=file:{database.FullName};Pooling=true;Synchronous=Off;journal mode=TRUNCATE;DefaultTimeout=5";
 
-      if (SystemInformation.IsRunningOnMono()) {
+      if (SystemInformation.IsRunningOnMono())
+      {
         return GetDatabaseConnectionMono(cs);
       }
       return GetDatabaseConnectionSDS(cs);

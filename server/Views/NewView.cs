@@ -15,7 +15,8 @@ namespace NMaier.SimpleDlna.Server.Views
     public override bool Allowed(IMediaResource res)
     {
       var i = res as IMetaInfo;
-      if (i == null) {
+      if (i == null)
+      {
         return false;
       }
       return i.InfoDate >= minDate;
@@ -23,13 +24,16 @@ namespace NMaier.SimpleDlna.Server.Views
 
     public void SetParameters(ConfigParameters parameters)
     {
-      if (parameters == null) {
+      if (parameters == null)
+      {
         throw new ArgumentNullException(nameof(parameters));
       }
 
-      foreach (var v in parameters.GetValuesForKey("date")) {
+      foreach (var v in parameters.GetValuesForKey("date"))
+      {
         DateTime min;
-        if (DateTime.TryParse(v, out min)) {
+        if (DateTime.TryParse(v, out min))
+        {
           minDate = min;
         }
       }

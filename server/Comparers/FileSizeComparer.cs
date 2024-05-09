@@ -12,7 +12,8 @@ namespace NMaier.SimpleDlna.Server.Comparers
     {
       var xm = x as IMetaInfo;
       var ym = y as IMetaInfo;
-      if (xm == null || ym == null || !xm.InfoSize.HasValue || !ym.InfoSize.HasValue) {
+      if (xm == null || ym == null || !xm.InfoSize.HasValue || !ym.InfoSize.HasValue)
+      {
         return base.Compare(x, y);
       }
       var rv = xm.InfoSize.Value.CompareTo(ym.InfoSize.Value);

@@ -1,4 +1,4 @@
-﻿/***
+/***
 The MIT License (MIT)
 Copyright © 2008 Lee Houghton
 Copyright © 2014 Nils Maier
@@ -40,7 +40,8 @@ namespace NMaier.Windows.Forms
 
     public static readonly bool IsSupported = new Func<bool>(() =>
     {
-      if (!VisualStyleRenderer.IsSupported) {
+      if (!VisualStyleRenderer.IsSupported)
+      {
         return false;
       }
       return IsElementDefined(
@@ -159,7 +160,8 @@ namespace NMaier.Windows.Forms
     {
       get
       {
-        switch (Theme) {
+        switch (Theme)
+        {
           case ToolbarTheme.MediaToolbar:
             return "Media::";
           case ToolbarTheme.CommunicationsToolbar:
@@ -182,10 +184,12 @@ namespace NMaier.Windows.Forms
 
     private bool EnsureRenderer()
     {
-      if (!IsSupported) {
+      if (!IsSupported)
+      {
         return false;
       }
-      if (renderer == null) {
+      if (renderer == null)
+      {
         renderer =
           new VisualStyleRenderer(VisualStyleElement.Button.PushButton.Normal);
       }
@@ -194,7 +198,8 @@ namespace NMaier.Windows.Forms
 
     private static Rectangle GetBackgroundRectangle(ToolStripItem item)
     {
-      if (!item.IsOnDropDown) {
+      if (!item.IsOnDropDown)
+      {
         return new Rectangle(new Point(), item.Bounds.Size);
       }
 
@@ -209,8 +214,10 @@ namespace NMaier.Windows.Forms
     {
       var selected = item.Selected;
 
-      if (item.IsOnDropDown) {
-        if (item.Enabled) {
+      if (item.IsOnDropDown)
+      {
+        if (item.Enabled)
+        {
           return selected ?
             (int)MenuPopupItemStates.Hover :
             (int)MenuPopupItemStates.Normal;
@@ -220,13 +227,15 @@ namespace NMaier.Windows.Forms
           (int)MenuPopupItemStates.Disabled;
       }
 
-      if (item.Pressed) {
+      if (item.Pressed)
+      {
         return item.Enabled ?
           (int)MenuBarItemStates.Pushed :
           (int)MenuBarItemStates.DisabledPushed;
       }
 
-      if (item.Enabled) {
+      if (item.Enabled)
+      {
         return selected ?
           (int)MenuBarItemStates.Hover :
           (int)MenuBarItemStates.Normal;
@@ -250,7 +259,8 @@ namespace NMaier.Windows.Forms
                                     MarginProperty marginType)
     {
       NativeMethods.MARGINS margins;
-      try {
+      try
+      {
         var hDC = dc.GetHdc();
         var rv = NativeMethods.GetThemeMargins(
           renderer.Handle,
@@ -260,7 +270,8 @@ namespace NMaier.Windows.Forms
           (int)marginType,
           IntPtr.Zero,
           out margins);
-        if (rv == 0) {
+        if (rv == 0)
+        {
           return new Padding(
             margins.cxLeftWidth,
             margins.cyTopHeight,
@@ -269,10 +280,12 @@ namespace NMaier.Windows.Forms
         }
         return new Padding(0);
       }
-      catch (Exception) {
+      catch (Exception)
+      {
         return renderer.GetMargins(dc, marginType);
       }
-      finally {
+      finally
+      {
         dc.ReleaseHdc();
       }
     }
@@ -285,7 +298,8 @@ namespace NMaier.Windows.Forms
 
     protected override void Initialize(ToolStrip toolStrip)
     {
-      if (toolStrip.Parent is ToolStripPanel) {
+      if (toolStrip.Parent is ToolStripPanel)
+      {
         toolStrip.BackColor = Color.Transparent;
       }
       base.Initialize(toolStrip);
@@ -293,8 +307,10 @@ namespace NMaier.Windows.Forms
 
     protected override void InitializePanel(ToolStripPanel toolStripPanel)
     {
-      foreach (Control control in toolStripPanel.Controls) {
-        if (control is ToolStrip) {
+      foreach (Control control in toolStripPanel.Controls)
+      {
+        if (control is ToolStrip)
+        {
           Initialize((ToolStrip)control);
         }
       }
@@ -306,7 +322,8 @@ namespace NMaier.Windows.Forms
     {
       var el = new VSEInternal(className, part, state);
       bool rv;
-      if (!defined.TryGetValue(el, out rv)) {
+      if (!defined.TryGetValue(el, out rv))
+      {
         defined.Add(el, rv = IsElementDefined(el));
       }
       return rv;
@@ -314,7 +331,8 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
     {
-      if (EnsureRenderer()) {
+      if (EnsureRenderer())
+      {
         e.ArrowColor = GetItemTextColor(e.Item);
       }
       base.OnRenderArrow(e);
@@ -322,11 +340,13 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderImageMargin(ToolStripRenderEventArgs e)
     {
-      if (!EnsureRenderer()) {
+      if (!EnsureRenderer())
+      {
         base.OnRenderImageMargin(e);
         return;
       }
-      if (!e.ToolStrip.IsDropDown) {
+      if (!e.ToolStrip.IsDropDown)
+      {
         return;
       }
       renderer.SetParameters(MenuClass, (int)MenuParts.PopupGutter, 0);
@@ -340,12 +360,14 @@ namespace NMaier.Windows.Forms
       rect.Height -= 4;
       var sepWidth =
         renderer.GetPartSize(e.Graphics, ThemeSizeType.True).Width;
-      if (e.ToolStrip.RightToLeft == RightToLeft.Yes) {
+      if (e.ToolStrip.RightToLeft == RightToLeft.Yes)
+      {
         rect = new Rectangle(
           rect.X - extraWidth, rect.Y, sepWidth, rect.Height);
         rect.X += sepWidth;
       }
-      else {
+      else
+      {
         rect = new Rectangle(
           rect.Width + extraWidth - sepWidth,
           rect.Y,
@@ -357,14 +379,16 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderItemCheck(ToolStripItemImageRenderEventArgs e)
     {
-      if (!EnsureRenderer()) {
+      if (!EnsureRenderer())
+      {
         base.OnRenderItemCheck(e);
         return;
       }
       var bgRect = GetBackgroundRectangle(e.Item);
       bgRect.Width = bgRect.Height;
 
-      if (e.Item.RightToLeft == RightToLeft.Yes) {
+      if (e.Item.RightToLeft == RightToLeft.Yes)
+      {
         bgRect = new Rectangle(
           e.ToolStrip.ClientSize.Width - bgRect.X - bgRect.Width,
           bgRect.Y,
@@ -394,7 +418,8 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderItemText(ToolStripItemTextRenderEventArgs e)
     {
-      if (EnsureRenderer()) {
+      if (EnsureRenderer())
+      {
         e.TextColor = GetItemTextColor(e.Item);
       }
       base.OnRenderItemText(e);
@@ -402,7 +427,8 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
     {
-      if (EnsureRenderer()) {
+      if (EnsureRenderer())
+      {
         var partID = e.Item.IsOnDropDown ?
           (int)MenuParts.PopupItem :
           (int)MenuParts.BarItem;
@@ -411,7 +437,8 @@ namespace NMaier.Windows.Forms
         var bgRect = GetBackgroundRectangle(e.Item);
         renderer.DrawBackground(e.Graphics, bgRect, bgRect);
       }
-      else {
+      else
+      {
         base.OnRenderMenuItemBackground(e);
       }
     }
@@ -419,17 +446,22 @@ namespace NMaier.Windows.Forms
     protected override void OnRenderOverflowButtonBackground(
       ToolStripItemRenderEventArgs e)
     {
-      if (EnsureRenderer()) {
+      if (EnsureRenderer())
+      {
         var rebarClass = RebarClass;
-        if (Theme == ToolbarTheme.BrowserTabBar) {
+        if (Theme == ToolbarTheme.BrowserTabBar)
+        {
           rebarClass = "Rebar";
         }
         var state = VisualStyleElement.Rebar.Chevron.Normal.State;
-        if (e.Item.Pressed) {
+        if (e.Item.Pressed)
+        {
           state = VisualStyleElement.Rebar.Chevron.Pressed.State;
         }
-        else {
-          if (e.Item.Selected) {
+        else
+        {
+          if (e.Item.Selected)
+          {
             state = VisualStyleElement.Rebar.Chevron.Hot.State;
           }
         }
@@ -440,7 +472,8 @@ namespace NMaier.Windows.Forms
         renderer.DrawBackground(
           e.Graphics, new Rectangle(Point.Empty, e.Item.Size));
       }
-      else {
+      else
+      {
         base.OnRenderOverflowButtonBackground(e);
       }
     }
@@ -448,7 +481,8 @@ namespace NMaier.Windows.Forms
     protected override void OnRenderSeparator(
       ToolStripSeparatorRenderEventArgs e)
     {
-      if (e.ToolStrip.IsDropDown && EnsureRenderer()) {
+      if (e.ToolStrip.IsDropDown && EnsureRenderer())
+      {
         renderer.SetParameters(MenuClass, (int)MenuParts.PopupSeparator, 0);
         var rect = new Rectangle(
           e.ToolStrip.DisplayRectangle.Left,
@@ -457,7 +491,8 @@ namespace NMaier.Windows.Forms
           e.Item.Height);
         renderer.DrawBackground(e.Graphics, rect, rect);
       }
-      else {
+      else
+      {
         base.OnRenderSeparator(e);
       }
     }
@@ -465,7 +500,8 @@ namespace NMaier.Windows.Forms
     protected override void OnRenderSplitButtonBackground(
       ToolStripItemRenderEventArgs e)
     {
-      if (!EnsureRenderer()) {
+      if (!EnsureRenderer())
+      {
         base.OnRenderSplitButtonBackground(e);
         return;
       }
@@ -481,26 +517,33 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
     {
-      if (!EnsureRenderer()) {
+      if (!EnsureRenderer())
+      {
         base.OnRenderToolStripBackground(e);
         return;
       }
-      if (e.ToolStrip.IsDropDown) {
+      if (e.ToolStrip.IsDropDown)
+      {
         renderer.SetParameters(MenuClass, (int)MenuParts.PopupBackground, 0);
       }
-      else {
-        if (e.ToolStrip.Parent is ToolStripPanel) {
+      else
+      {
+        if (e.ToolStrip.Parent is ToolStripPanel)
+        {
           return;
         }
-        if (IsElementDefined(RebarClass, RebarBackground, 0)) {
+        if (IsElementDefined(RebarClass, RebarBackground, 0))
+        {
           renderer.SetParameters(RebarClass, RebarBackground, 0);
         }
-        else {
+        else
+        {
           renderer.SetParameters(RebarClass, 0, 0);
         }
       }
 
-      if (renderer.IsBackgroundPartiallyTransparent()) {
+      if (renderer.IsBackgroundPartiallyTransparent())
+      {
         renderer.DrawParentBackground(
           e.Graphics,
           e.ToolStrip.ClientRectangle,
@@ -514,12 +557,14 @@ namespace NMaier.Windows.Forms
 
     protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
     {
-      if (!EnsureRenderer()) {
+      if (!EnsureRenderer())
+      {
         base.OnRenderToolStripBorder(e);
         return;
       }
       renderer.SetParameters(MenuClass, (int)MenuParts.PopupBorders, 0);
-      if (e.ToolStrip.IsDropDown) {
+      if (e.ToolStrip.IsDropDown)
+      {
         var oldClip = e.Graphics.Clip;
         var insideRect = e.ToolStrip.ClientRectangle;
         insideRect.Inflate(-1, -1);
@@ -535,18 +580,22 @@ namespace NMaier.Windows.Forms
     protected override void OnRenderToolStripPanelBackground(
       ToolStripPanelRenderEventArgs e)
     {
-      if (!EnsureRenderer()) {
+      if (!EnsureRenderer())
+      {
         base.OnRenderToolStripPanelBackground(e);
         return;
       }
-      if (IsElementDefined(RebarClass, RebarBackground, 0)) {
+      if (IsElementDefined(RebarClass, RebarBackground, 0))
+      {
         renderer.SetParameters(RebarClass, RebarBackground, 0);
       }
-      else {
+      else
+      {
         renderer.SetParameters(RebarClass, 0, 0);
       }
 
-      if (renderer.IsBackgroundPartiallyTransparent()) {
+      if (renderer.IsBackgroundPartiallyTransparent())
+      {
         renderer.DrawParentBackground(
           e.Graphics,
           e.ToolStripPanel.ClientRectangle,

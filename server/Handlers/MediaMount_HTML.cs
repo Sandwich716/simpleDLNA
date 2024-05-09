@@ -23,23 +23,26 @@ namespace NMaier.SimpleDlna.Server
     private IResponse ProcessHtmlRequest(IMediaItem aItem)
     {
       var item = aItem as IMediaFolder;
-      if (item == null) {
+      if (item == null)
+      {
         throw new HttpStatusException(HttpCode.NotFound);
       }
 
       var article = HtmlTools.CreateHtmlArticle(
         $"Folder: {item.Title}");
       var document = article.OwnerDocument;
-      if (document == null) {
+      if (document == null)
+      {
         throw new HttpStatusException(HttpCode.InternalError);
       }
 
       XmlNode e;
       var folders = document.EL(
         "ul",
-        new AttributeCollection {{"class", "folders"}}
+        new AttributeCollection { { "class", "folders" } }
         );
-      if (item.Parent != null) {
+      if (item.Parent != null)
+      {
         folders.AppendChild(e = document.EL("li"));
         e.AppendChild(document.EL(
           "a",
@@ -51,7 +54,8 @@ namespace NMaier.SimpleDlna.Server
           "Parent"
                         ));
       }
-      foreach (var i in item.ChildFolders) {
+      foreach (var i in item.ChildFolders)
+      {
         folders.AppendChild(e = document.EL("li"));
         e.AppendChild(document.EL(
           "a",
@@ -65,8 +69,9 @@ namespace NMaier.SimpleDlna.Server
 
       XmlNode items;
       article.AppendChild(items = document.EL(
-        "ul", new AttributeCollection {{"class", "items"}}));
-      foreach (var i in item.ChildItems) {
+        "ul", new AttributeCollection { { "class", "items" } }));
+      foreach (var i in item.ChildItems)
+      {
         items.AppendChild(e = document.EL("li"));
         var link = document.EL(
           "a",
@@ -82,10 +87,11 @@ namespace NMaier.SimpleDlna.Server
         e.AppendChild(link);
 
         details.AppendChild(document.EL(
-          "h3", new AttributeCollection {{"title", i.Title}}, i.Title));
+          "h3", new AttributeCollection { { "title", i.Title } }, i.Title));
 
         var props = i.Properties;
-        if (props.ContainsKey("HasCover")) {
+        if (props.ContainsKey("HasCover"))
+        {
           details.AppendChild(document.EL(
             "img",
             new AttributeCollection
@@ -99,22 +105,26 @@ namespace NMaier.SimpleDlna.Server
         }
 
         var table = document.EL("table");
-        foreach (var p in htmlItemProperties) {
+        foreach (var p in htmlItemProperties)
+        {
           string v;
-          if (props.TryGetValue(p, out v)) {
+          if (props.TryGetValue(p, out v))
+          {
             table.AppendChild(e = document.EL("tr"));
             e.AppendChild(document.EL("th", p));
             e.AppendChild(document.EL("td", v));
           }
         }
-        if (table.ChildNodes.Count != 0) {
+        if (table.ChildNodes.Count != 0)
+        {
           details.AppendChild(table);
         }
 
         string description;
-        if (props.TryGetValue("Description", out description)) {
+        if (props.TryGetValue("Description", out description))
+        {
           link.AppendChild(document.EL(
-            "p", new AttributeCollection {{"class", "desc"}},
+            "p", new AttributeCollection { { "class", "desc" } },
             description));
         }
       }

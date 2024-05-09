@@ -23,9 +23,12 @@ namespace NMaier.SimpleDlna.Server.Views
       SortFolder(root, sorted);
       DebugFormat("sort {0} - {1}", sorted.ChildFolders.Count(), sorted.ChildItems.Count());
       DebugFormat("root {0} - {1}", root.ChildFolders.Count(), root.ChildItems.Count());
-      foreach (var f in sorted.ChildFolders.ToList()) {
-        if (f.ChildCount < 2) {
-          foreach (var file in f.ChildItems) {
+      foreach (var f in sorted.ChildFolders.ToList())
+      {
+        if (f.ChildCount < 2)
+        {
+          foreach (var file in f.ChildItems)
+          {
             root.AddResource(file);
           }
           continue;
@@ -33,22 +36,26 @@ namespace NMaier.SimpleDlna.Server.Views
         var fsmi = f as VirtualFolder;
         root.AdoptFolder(fsmi);
       }
-      foreach (var f in sorted.ChildItems.ToList()) {
+      foreach (var f in sorted.ChildItems.ToList())
+      {
         root.AddResource(f);
       }
       DebugFormat("merg {0} - {1}", root.ChildFolders.Count(), root.ChildItems.Count());
       MergeFolders(root, root);
       DebugFormat("done {0} - {1}", root.ChildFolders.Count(), root.ChildItems.Count());
 
-      if (!cascade || root.ChildFolders.LongCount() <= 50) {
+      if (!cascade || root.ChildFolders.LongCount() <= 50)
+      {
         return root;
       }
       var cascaded = new DoubleKeyedVirtualFolder(root, "Series");
-      foreach (var i in root.ChildFolders.ToList()) {
+      foreach (var i in root.ChildFolders.ToList())
+      {
         var folder = cascaded.GetFolder(i.Title.StemCompareBase().Substring(0, 1).ToUpper());
         folder.AdoptFolder(i);
       }
-      foreach (var i in root.ChildItems.ToList()) {
+      foreach (var i in root.ChildItems.ToList())
+      {
         var folder = cascaded.GetFolder(i.Title.StemCompareBase().Substring(0, 1).ToUpper());
         folder.AddResource(i);
       }
