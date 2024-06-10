@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -73,6 +73,21 @@ namespace NMaier.SimpleDlna.Utilities
       {
         // ignored
       }
+      
+      //TEST FFPMEG BINARY FOLDER
+      try
+      {
+        var ffhomeBinary = Path.Combine(Environment.CurrentDirectory, "ffmpeg");
+        if (!string.IsNullOrWhiteSpace(ffhomeBinary))
+        {
+          places.Add(new DirectoryInfo(ffhomeBinary));
+        }
+      }
+      catch (Exception)
+      {
+        // ignored
+      }
+      //END TEST
       foreach (var l in specialLocations)
       {
         try
