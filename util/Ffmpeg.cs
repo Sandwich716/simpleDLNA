@@ -309,7 +309,7 @@ namespace NMaier.SimpleDlna.Utilities
 #endif
           sti.UseShellExecute = false;
           sti.FileName = FFmpegExecutable;
-          sti.Arguments = $"-i \"{file.FullName}\" -map s:0 -f srt pipe:";
+          sti.Arguments = $"-i \"{file.FullName}\" -map 0:s -f srt pipe:";
           sti.LoadUserProfile = false;
           sti.RedirectStandardOutput = true;
           p.Start();
