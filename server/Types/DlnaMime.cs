@@ -6,6 +6,7 @@ namespace NMaier.SimpleDlna.Server
     AudioFLAC,
     AudioMP2,
     AudioMP3,
+    AudioM4A,
     AudioWAV,
     AudioVORBIS,
     ImageGIF,
