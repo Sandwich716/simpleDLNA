@@ -26,7 +26,7 @@ namespace NMaier.SimpleDlna.Server
     {"3gp", "3gpp"};
 
     private static readonly string[] extAAC =
-    {"aac", "mp4a", "m4a"};
+    {"aac"};
 
     private static readonly string[] extAVC =
     {"avc", "mp4", "m4v", "mov"};
@@ -51,6 +51,9 @@ namespace NMaier.SimpleDlna.Server
 
     private static readonly string[] extMP2 =
     {"mp2"};
+
+    private static readonly string[] extM4A =
+    {"m4a", "mp4a"};
 
     private static readonly string[] extMPEG =
     {"mpg", "mpe", "mpeg", "mpg2", "mpeg2", "ts", "vob", "m2v"};
@@ -91,6 +94,7 @@ namespace NMaier.SimpleDlna.Server
       {DlnaMime.AudioFLAC, "audio/flac"},
       {DlnaMime.AudioMP2, "audio/mpeg"},
       {DlnaMime.AudioMP3, "audio/mpeg"},
+      {DlnaMime.AudioM4A, "audio/x-m4a"},
       {DlnaMime.AudioWAV, "audio/wav"},
       {DlnaMime.AudioVORBIS, "audio/ogg"},
       {DlnaMime.ImageGIF, "image/gif"},
@@ -131,6 +135,12 @@ namespace NMaier.SimpleDlna.Server
         DlnaMime.AudioMP3, new List<string>
         {
           "MP3"
+        }
+      },
+      {
+        DlnaMime.AudioM4A, new List<string>
+        {
+          "M4A"
         }
       },
       {
@@ -304,6 +314,8 @@ namespace NMaier.SimpleDlna.Server
         new
         {t = DlnaMime.AudioMP3, e = extMP3},
         new
+        {t = DlnaMime.AudioM4A, e = extM4A},
+        new
         {t = DlnaMime.AudioWAV, e = extWAV},
         new
         {t = DlnaMime.AudioVORBIS, e = extVORBIS},
@@ -348,7 +360,7 @@ namespace NMaier.SimpleDlna.Server
         new[] { extJPEG, extPNG, extGIF },
         DlnaMediaTypes.Image);
       InitMedia(
-        new[] { extAAC, extFLAC, extMP2, extMP3, extWAV, extVORBIS },
+        new[] { extAAC, extFLAC, extMP2, extMP3, extM4A, extWAV, extVORBIS },
         DlnaMediaTypes.Audio);
     }
 
