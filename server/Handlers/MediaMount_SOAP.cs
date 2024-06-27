@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -235,15 +235,36 @@ namespace NMaier.SimpleDlna.Server
 #endif
     }
 
-    private static void Browse_AddFolder(XmlDocument result, IMediaFolder f)
+    private static void Browse_AddFolder(XmlDocument result, IMediaFolder f, string requestedId = null)
     {
+      if (f == null)
+        return;
       var meta = f as IMetaInfo;
       var container = result.CreateElement(string.Empty, "container", NS_DIDL);
       container.SetAttribute("restricted", "0");
       container.SetAttribute("childCount", f.ChildCount.ToString());
-      container.SetAttribute("id", f.Id);
-      var parent = f.Parent;
-      container.SetAttribute("parentID", parent == null ? Identifiers.GENERAL_ROOT : parent.Id);
+      //container.SetAttribute("id", f.Id);
+      //var parent = f.Parent;
+      //container.SetAttribute("parentID", parent == null ? Identifiers.GENERAL_ROOT : parent.Id);
+
+      if (string.Equals(requestedId, "0"))
+      {
+        container.SetAttribute("id", "0");
+        container.SetAttribute("parentID", "-1");
+      }
+      else
+      {
+        container.SetAttribute("id", f.Id.ToString());
+        var parent = f.Parent;
+        if (parent == null)
+        {
+          container.SetAttribute("parentID", Identifiers.GENERAL_ROOT);
+        }
+        else
+        {
+          container.SetAttribute("parentID", f.Id.ToString());
+        }
+      }
 
       var title = result.CreateElement("dc", "title", NS_DC);
       title.InnerText = f.Title;
@@ -409,11 +430,8 @@ namespace NMaier.SimpleDlna.Server
         Debug("Not all params provided", ex);
       }
 
-      var root = GetItem(id) as IMediaFolder;
-      if (root == null)
-      {
-        throw new ArgumentException("Invalid id");
-      }
+      var mediaItem = GetItem(id) as IMediaItem;
+
       var result = new XmlDocument();
 
       var didl = result.CreateElement(string.Empty, "DIDL-Lite", NS_DIDL);
@@ -423,22 +441,39 @@ namespace NMaier.SimpleDlna.Server
       didl.SetAttribute("xmlns:sec", NS_SEC);
       result.AppendChild(didl);
 
-      if (flag == "BrowseMetadata")
+      //from github.com/antonio-bakula/simpleDLNA
+
+      int childCount = 0;
+      if (mediaItem is IMediaFolder)
       {
-        Browse_AddFolder(result, root);
-        provided++;
+        var root = mediaItem as IMediaFolder;
+        if (flag == "BrowseMetadata")      
+        {
+          Browse_AddFolder(result, root);
+          provided++;
+        }
+        else
+        {
+          provided = BrowseFolder_AddItems(request, result, root, start, requested);
+        }
+        childCount = root.ChildCount;
       }
-      else
+      else if (mediaItem is IMediaResource)
       {
-        provided = BrowseFolder_AddItems(
-          request, result, root, start, requested);
+        childCount = 0;
+        provided = 1;
+        //var item = result.CreateElement(string.Empty, "item", NS_DIDL);
+        //item.SetAttribute("id", id);
+        //AddGeneralProperties((mediaItem as IMediaResource).Properties, item);
+        Browse_AddItem(request, result, mediaItem as IMediaResource);
       }
+
       var resXML = result.OuterXml;
       rv = new AttributeCollection
       {
         {"Result", resXML},
         {"NumberReturned", provided.ToString()},
-        {"TotalMatches", root.ChildCount.ToString()},
+        {"TotalMatches", childCount.ToString()},
         {"UpdateID", systemID.ToString()}
       };
       soapCache[key] = rv;
