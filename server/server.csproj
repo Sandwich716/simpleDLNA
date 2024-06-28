@@ -172,6 +172,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Resources\contentdirectory.xml" />
     <None Include="Resources\description.xml" />
