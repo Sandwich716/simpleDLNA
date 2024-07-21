@@ -41,9 +41,14 @@ namespace NMaier.SimpleDlna.Utilities
         }
         var raw = new byte[6];
         var length = 6u;
-#pragma warning disable 612,618
-        var addr = (uint)ip.Address;
-#pragma warning restore 612,618
+
+        byte[] bytes = ip.GetAddressBytes();
+        if (!BitConverter.IsLittleEndian)
+        {
+          Array.Reverse(bytes);
+        }
+        uint addr = System.BitConverter.ToUInt32(bytes, 0);
+
         string mac = null;
 
         try
